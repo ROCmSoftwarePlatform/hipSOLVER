@@ -1,5 +1,5 @@
 /* ************************************************************************
- * Copyright 2020-2021 Advanced Micro Devices, Inc.
+ * Copyright 2021 Advanced Micro Devices, Inc.
  * ************************************************************************ */
 
 #pragma once
@@ -7,190 +7,283 @@
 #include "clientcommon.hpp"
 
 template <bool FORTRAN, typename T, typename U, typename V>
-void potrf_checkBadArgs(const hipsolverHandle_t   handle,
+void potrs_checkBadArgs(const hipsolverHandle_t   handle,
                         const hipsolverFillMode_t uplo,
                         const int                 n,
+                        const int                 nrhs,
                         T                         dA,
                         const int                 lda,
                         const int                 stA,
-                        U                         dWork,
+                        T                         dB,
+                        const int                 ldb,
+                        const int                 stB,
+                        V                         dWork,
                         const int                 lwork,
-                        V                         dinfo,
+                        U                         dInfo,
                         const int                 bc)
 {
     // handle
     EXPECT_ROCBLAS_STATUS(
-        hipsolver_potrf(FORTRAN, nullptr, uplo, n, dA, lda, stA, dWork, lwork, dinfo, bc),
+        hipsolver_potrs(
+            FORTRAN, nullptr, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, dWork, lwork, dInfo, bc),
         HIPSOLVER_STATUS_NOT_INITIALIZED);
 
     // values
-    EXPECT_ROCBLAS_STATUS(
-        hipsolver_potrf(
-            FORTRAN, handle, hipsolverFillMode_t(-1), n, dA, lda, stA, dWork, lwork, dinfo, bc),
-        HIPSOLVER_STATUS_INVALID_ENUM);
+    EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
+                                          handle,
+                                          hipsolverFillMode_t(-1),
+                                          n,
+                                          nrhs,
+                                          dA,
+                                          lda,
+                                          stA,
+                                          dB,
+                                          ldb,
+                                          stB,
+                                          dWork,
+                                          lwork,
+                                          dInfo,
+                                          bc),
+                          HIPSOLVER_STATUS_INVALID_ENUM);
 
 #if defined(__HIP_PLATFORM_HCC__) || defined(__HIP_PLATFORM_AMD__)
     // pointers
-    EXPECT_ROCBLAS_STATUS(
-        hipsolver_potrf(FORTRAN, handle, uplo, n, (T) nullptr, lda, stA, dWork, lwork, dinfo, bc),
-        HIPSOLVER_STATUS_INVALID_VALUE);
-    EXPECT_ROCBLAS_STATUS(
-        hipsolver_potrf(FORTRAN, handle, uplo, n, dA, lda, stA, dWork, lwork, (V) nullptr, bc),
-        HIPSOLVER_STATUS_INVALID_VALUE);
+    EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
+                                          handle,
+                                          uplo,
+                                          n,
+                                          nrhs,
+                                          (T) nullptr,
+                                          lda,
+                                          stA,
+                                          dB,
+                                          ldb,
+                                          stB,
+                                          dWork,
+                                          lwork,
+                                          dInfo,
+                                          bc),
+                          HIPSOLVER_STATUS_INVALID_VALUE);
+    EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
+                                          handle,
+                                          uplo,
+                                          n,
+                                          nrhs,
+                                          dA,
+                                          lda,
+                                          stA,
+                                          (T) nullptr,
+                                          ldb,
+                                          stB,
+                                          dWork,
+                                          lwork,
+                                          dInfo,
+                                          bc),
+                          HIPSOLVER_STATUS_INVALID_VALUE);
 #endif
 }
 
 template <bool FORTRAN, bool BATCHED, bool STRIDED, typename T>
-void testing_potrf_bad_arg()
+void testing_potrs_bad_arg()
 {
     // safe arguments
     hipsolver_local_handle handle;
-    hipsolverFillMode_t    uplo = HIPSOLVER_FILL_MODE_UPPER;
     int                    n    = 1;
+    int                    nrhs = 1;
     int                    lda  = 1;
+    int                    ldb  = 1;
     int                    stA  = 1;
+    int                    stB  = 1;
     int                    bc   = 1;
+    hipsolverFillMode_t    uplo = HIPSOLVER_FILL_MODE_UPPER;
 
     if(BATCHED)
     {
         // memory allocations
         device_batch_vector<T>           dA(1, 1, 1);
-        device_strided_batch_vector<int> dinfo(1, 1, 1, 1);
+        device_batch_vector<T>           dB(1, 1, 1);
+        device_strided_batch_vector<int> dInfo(1, 1, 1, 1);
         CHECK_HIP_ERROR(dA.memcheck());
-        CHECK_HIP_ERROR(dinfo.memcheck());
+        CHECK_HIP_ERROR(dB.memcheck());
+        CHECK_HIP_ERROR(dInfo.memcheck());
 
         int size_W;
-        hipsolver_potrf_bufferSize(FORTRAN, handle, uplo, n, dA.data(), lda, &size_W, bc);
+        hipsolver_potrs_bufferSize(
+            FORTRAN, handle, uplo, n, nrhs, dA.data(), lda, dB.data(), ldb, &size_W, bc);
         device_strided_batch_vector<T> dWork(size_W, 1, size_W, bc);
         if(size_W)
             CHECK_HIP_ERROR(dWork.memcheck());
 
         // check bad arguments
-        potrf_checkBadArgs<FORTRAN>(
-            handle, uplo, n, dA.data(), lda, stA, dWork.data(), size_W, dinfo.data(), bc);
+        potrs_checkBadArgs<FORTRAN>(handle,
+                                    uplo,
+                                    n,
+                                    nrhs,
+                                    dA.data(),
+                                    lda,
+                                    stA,
+                                    dB.data(),
+                                    ldb,
+                                    stB,
+                                    dWork.data(),
+                                    size_W,
+                                    dInfo.data(),
+                                    bc);
     }
     else
     {
         // memory allocations
         device_strided_batch_vector<T>   dA(1, 1, 1, 1);
-        device_strided_batch_vector<int> dinfo(1, 1, 1, 1);
+        device_strided_batch_vector<T>   dB(1, 1, 1, 1);
+        device_strided_batch_vector<int> dInfo(1, 1, 1, 1);
         CHECK_HIP_ERROR(dA.memcheck());
-        CHECK_HIP_ERROR(dinfo.memcheck());
+        CHECK_HIP_ERROR(dB.memcheck());
+        CHECK_HIP_ERROR(dInfo.memcheck());
 
         int size_W;
-        hipsolver_potrf_bufferSize(FORTRAN, handle, uplo, n, dA.data(), lda, &size_W, bc);
+        hipsolver_potrs_bufferSize(
+            FORTRAN, handle, uplo, n, nrhs, dA.data(), lda, dB.data(), ldb, &size_W, bc);
         device_strided_batch_vector<T> dWork(size_W, 1, size_W, bc);
         if(size_W)
             CHECK_HIP_ERROR(dWork.memcheck());
 
         // check bad arguments
-        potrf_checkBadArgs<FORTRAN>(
-            handle, uplo, n, dA.data(), lda, stA, dWork.data(), size_W, dinfo.data(), bc);
+        potrs_checkBadArgs<FORTRAN>(handle,
+                                    uplo,
+                                    n,
+                                    nrhs,
+                                    dA.data(),
+                                    lda,
+                                    stA,
+                                    dB.data(),
+                                    ldb,
+                                    stB,
+                                    dWork.data(),
+                                    size_W,
+                                    dInfo.data(),
+                                    bc);
     }
 }
 
-template <bool CPU, bool GPU, typename T, typename Td, typename Ud, typename Th, typename Uh>
-void potrf_initData(const hipsolverHandle_t   handle,
+template <bool CPU, bool GPU, typename T, typename Td, typename Th>
+void potrs_initData(const hipsolverHandle_t   handle,
                     const hipsolverFillMode_t uplo,
                     const int                 n,
+                    const int                 nrhs,
                     Td&                       dA,
                     const int                 lda,
                     const int                 stA,
-                    Ud&                       dInfo,
+                    Td&                       dB,
+                    const int                 ldb,
+                    const int                 stB,
                     const int                 bc,
                     Th&                       hA,
-                    Uh&                       hInfo)
+                    Th&                       hB)
 {
     if(CPU)
     {
         rocblas_init<T>(hA, true);
+        rocblas_init<T>(hB, true);
+        int info;
 
-        for(rocblas_int b = 0; b < bc; ++b)
+        for(int b = 0; b < bc; ++b)
         {
             // scale to ensure positive definiteness
-            for(rocblas_int i = 0; i < n; i++)
+            for(int i = 0; i < n; i++)
                 hA[b][i + i * lda] = hA[b][i + i * lda] * conj(hA[b][i + i * lda]) * 400;
+
+            // do the Cholesky factorization of matrix A w/ the reference LAPACK routine
+            cblas_potrf<T>(uplo, n, hA[b], lda, &info);
         }
     }
 
     if(GPU)
     {
-        // now copy data to the GPU
+        // now copy matrices to the GPU
         CHECK_HIP_ERROR(dA.transfer_from(hA));
+        CHECK_HIP_ERROR(dB.transfer_from(hB));
     }
 }
 
 template <bool FORTRAN, typename T, typename Td, typename Ud, typename Vd, typename Th, typename Uh>
-void potrf_getError(const hipsolverHandle_t   handle,
+void potrs_getError(const hipsolverHandle_t   handle,
                     const hipsolverFillMode_t uplo,
                     const int                 n,
+                    const int                 nrhs,
                     Td&                       dA,
                     const int                 lda,
                     const int                 stA,
+                    Td&                       dB,
+                    const int                 ldb,
+                    const int                 stB,
                     Vd&                       dWork,
                     const int                 lwork,
                     Ud&                       dInfo,
                     const int                 bc,
                     Th&                       hA,
-                    Th&                       hARes,
+                    Th&                       hB,
+                    Th&                       hBRes,
                     Uh&                       hInfo,
-                    Uh&                       hInfoRes,
                     double*                   max_err)
 {
     // input data initialization
-    potrf_initData<true, true, T>(handle, uplo, n, dA, lda, stA, dInfo, bc, hA, hInfo);
+    potrs_initData<true, true, T>(handle, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, bc, hA, hB);
 
     // execute computations
     // GPU lapack
-    CHECK_ROCBLAS_ERROR(hipsolver_potrf(
-        FORTRAN, handle, uplo, n, dA.data(), lda, stA, dWork.data(), lwork, dInfo.data(), bc));
-    CHECK_HIP_ERROR(hARes.transfer_from(dA));
-    CHECK_HIP_ERROR(hInfoRes.transfer_from(dInfo));
+    CHECK_ROCBLAS_ERROR(hipsolver_potrs(FORTRAN,
+                                        handle,
+                                        uplo,
+                                        n,
+                                        nrhs,
+                                        dA.data(),
+                                        lda,
+                                        stA,
+                                        dB.data(),
+                                        ldb,
+                                        stB,
+                                        dWork.data(),
+                                        lwork,
+                                        dInfo.data(),
+                                        bc));
+    CHECK_HIP_ERROR(hBRes.transfer_from(dB));
 
     // CPU lapack
     for(int b = 0; b < bc; ++b)
-        cblas_potrf<T>(uplo, n, hA[b], lda, hInfo[b]);
+    {
+        cblas_potrs<T>(uplo, n, nrhs, hA[b], lda, hB[b], ldb);
+    }
 
-    // error is ||hA - hARes|| / ||hA|| (ideally ||LL' - Lres Lres'|| / ||LL'||)
+    // error is ||hB - hBRes|| / ||hB||
     // (THIS DOES NOT ACCOUNT FOR NUMERICAL REPRODUCIBILITY ISSUES.
     // IT MIGHT BE REVISITED IN THE FUTURE)
-    // using frobenius norm
+    // using vector-induced infinity norm
     double err;
-    int    nn;
     *max_err = 0;
     for(int b = 0; b < bc; ++b)
     {
-        nn = hInfoRes[b][0] == 0 ? n : hInfoRes[b][0];
-        // (TODO: For now, the algorithm is modifying the whole input matrix even when
-        //  it is not positive definite. So we only check the principal nn-by-nn submatrix.
-        //  Once this is corrected, nn could be always equal to n.)
-        if(uplo == HIPSOLVER_FILL_MODE_UPPER)
-            err = norm_error_upperTr('F', nn, nn, lda, hA[b], hARes[b]);
-        else
-            err = norm_error_lowerTr('F', nn, nn, lda, hA[b], hARes[b]);
+        err      = norm_error('I', n, nrhs, ldb, hB[b], hBRes[b]);
         *max_err = err > *max_err ? err : *max_err;
     }
-
-    // also check info for non positive definite cases
-    err = 0;
-    for(int b = 0; b < bc; ++b)
-        if(hInfo[b][0] != hInfoRes[b][0])
-            err++;
-    *max_err += err;
 }
 
 template <bool FORTRAN, typename T, typename Td, typename Ud, typename Vd, typename Th, typename Uh>
-void potrf_getPerfData(const hipsolverHandle_t   handle,
+void potrs_getPerfData(const hipsolverHandle_t   handle,
                        const hipsolverFillMode_t uplo,
                        const int                 n,
+                       const int                 nrhs,
                        Td&                       dA,
                        const int                 lda,
                        const int                 stA,
+                       Td&                       dB,
+                       const int                 ldb,
+                       const int                 stB,
                        Vd&                       dWork,
                        const int                 lwork,
                        Ud&                       dInfo,
                        const int                 bc,
                        Th&                       hA,
+                       Th&                       hB,
                        Uh&                       hInfo,
                        double*                   gpu_time_used,
                        double*                   cpu_time_used,
@@ -199,24 +292,41 @@ void potrf_getPerfData(const hipsolverHandle_t   handle,
 {
     if(!perf)
     {
-        potrf_initData<true, false, T>(handle, uplo, n, dA, lda, stA, dInfo, bc, hA, hInfo);
+        potrs_initData<true, false, T>(
+            handle, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, bc, hA, hB);
 
         // cpu-lapack performance (only if not in perf mode)
         *cpu_time_used = get_time_us_no_sync();
         for(int b = 0; b < bc; ++b)
-            cblas_potrf<T>(uplo, n, hA[b], lda, hInfo[b]);
+        {
+            cblas_potrs<T>(uplo, n, nrhs, hA[b], lda, hB[b], ldb);
+        }
         *cpu_time_used = get_time_us_no_sync() - *cpu_time_used;
     }
 
-    potrf_initData<true, false, T>(handle, uplo, n, dA, lda, stA, dInfo, bc, hA, hInfo);
+    potrs_initData<true, false, T>(handle, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, bc, hA, hB);
 
     // cold calls
     for(int iter = 0; iter < 2; iter++)
     {
-        potrf_initData<false, true, T>(handle, uplo, n, dA, lda, stA, dInfo, bc, hA, hInfo);
+        potrs_initData<false, true, T>(
+            handle, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, bc, hA, hB);
 
-        CHECK_ROCBLAS_ERROR(hipsolver_potrf(
-            FORTRAN, handle, uplo, n, dA.data(), lda, stA, dWork.data(), lwork, dInfo.data(), bc));
+        CHECK_ROCBLAS_ERROR(hipsolver_potrs(FORTRAN,
+                                            handle,
+                                            uplo,
+                                            n,
+                                            nrhs,
+                                            dA.data(),
+                                            lda,
+                                            stA,
+                                            dB.data(),
+                                            ldb,
+                                            stB,
+                                            dWork.data(),
+                                            lwork,
+                                            dInfo.data(),
+                                            bc));
     }
 
     // gpu-lapack performance
@@ -226,44 +336,65 @@ void potrf_getPerfData(const hipsolverHandle_t   handle,
 
     for(int iter = 0; iter < hot_calls; iter++)
     {
-        potrf_initData<false, true, T>(handle, uplo, n, dA, lda, stA, dInfo, bc, hA, hInfo);
+        potrs_initData<false, true, T>(
+            handle, uplo, n, nrhs, dA, lda, stA, dB, ldb, stB, bc, hA, hB);
 
         start = get_time_us_sync(stream);
-        hipsolver_potrf(
-            FORTRAN, handle, uplo, n, dA.data(), lda, stA, dWork.data(), lwork, dInfo.data(), bc);
+        hipsolver_potrs(FORTRAN,
+                        handle,
+                        uplo,
+                        n,
+                        nrhs,
+                        dA.data(),
+                        lda,
+                        stA,
+                        dB.data(),
+                        ldb,
+                        stB,
+                        dWork.data(),
+                        lwork,
+                        dInfo.data(),
+                        bc);
         *gpu_time_used += get_time_us_sync(stream) - start;
     }
     *gpu_time_used /= hot_calls;
 }
 
 template <bool FORTRAN, bool BATCHED, bool STRIDED, typename T>
-void testing_potrf(Arguments& argus)
+void testing_potrs(Arguments& argus)
 {
     // get arguments
     hipsolver_local_handle handle;
     char                   uploC = argus.get<char>("uplo");
     int                    n     = argus.get<int>("n");
+    int                    nrhs  = argus.get<int>("nrhs", n);
     int                    lda   = argus.get<int>("lda", n);
+    int                    ldb   = argus.get<int>("ldb", n);
     int                    stA   = argus.get<int>("strideA", lda * n);
-    int                    bc    = argus.batch_count;
+    int                    stB   = argus.get<int>("strideB", ldb * nrhs);
 
     hipsolverFillMode_t uplo      = char2hipsolver_fill(uploC);
+    int                 bc        = argus.batch_count;
     int                 hot_calls = argus.iters;
 
-    rocblas_stride stARes = (argus.unit_check || argus.norm_check) ? stA : 0;
+    int stBRes = (argus.unit_check || argus.norm_check) ? stB : 0;
 
     // check non-supported values
     if(uplo != HIPSOLVER_FILL_MODE_UPPER && uplo != HIPSOLVER_FILL_MODE_LOWER)
     {
         if(BATCHED)
         {
-            EXPECT_ROCBLAS_STATUS(hipsolver_potrf(FORTRAN,
+            EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
                                                   handle,
                                                   uplo,
                                                   n,
+                                                  nrhs,
                                                   (T**)nullptr,
                                                   lda,
                                                   stA,
+                                                  (T**)nullptr,
+                                                  ldb,
+                                                  stB,
                                                   (T*)nullptr,
                                                   0,
                                                   (int*)nullptr,
@@ -272,13 +403,17 @@ void testing_potrf(Arguments& argus)
         }
         else
         {
-            EXPECT_ROCBLAS_STATUS(hipsolver_potrf(FORTRAN,
+            EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
                                                   handle,
                                                   uplo,
                                                   n,
+                                                  nrhs,
                                                   (T*)nullptr,
                                                   lda,
                                                   stA,
+                                                  (T*)nullptr,
+                                                  ldb,
+                                                  stB,
                                                   (T*)nullptr,
                                                   0,
                                                   (int*)nullptr,
@@ -294,23 +429,28 @@ void testing_potrf(Arguments& argus)
 
     // determine sizes
     size_t size_A    = size_t(lda) * n;
+    size_t size_B    = size_t(ldb) * nrhs;
     double max_error = 0, gpu_time_used = 0, cpu_time_used = 0;
 
-    size_t size_ARes = (argus.unit_check || argus.norm_check) ? size_A : 0;
+    size_t size_BRes = (argus.unit_check || argus.norm_check) ? size_B : 0;
 
     // check invalid sizes
-    bool invalid_size = (n < 0 || lda < n || bc < 0);
+    bool invalid_size = (n < 0 || nrhs < 0 || lda < n || ldb < n || bc < 0);
     if(invalid_size)
     {
         if(BATCHED)
         {
-            EXPECT_ROCBLAS_STATUS(hipsolver_potrf(FORTRAN,
+            EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
                                                   handle,
                                                   uplo,
                                                   n,
+                                                  nrhs,
                                                   (T**)nullptr,
                                                   lda,
                                                   stA,
+                                                  (T**)nullptr,
+                                                  ldb,
+                                                  stB,
                                                   (T*)nullptr,
                                                   0,
                                                   (int*)nullptr,
@@ -319,13 +459,17 @@ void testing_potrf(Arguments& argus)
         }
         else
         {
-            EXPECT_ROCBLAS_STATUS(hipsolver_potrf(FORTRAN,
+            EXPECT_ROCBLAS_STATUS(hipsolver_potrs(FORTRAN,
                                                   handle,
                                                   uplo,
                                                   n,
+                                                  nrhs,
                                                   (T*)nullptr,
                                                   lda,
                                                   stA,
+                                                  (T*)nullptr,
+                                                  ldb,
+                                                  stB,
                                                   (T*)nullptr,
                                                   0,
                                                   (int*)nullptr,
@@ -343,52 +487,65 @@ void testing_potrf(Arguments& argus)
     {
         // memory allocations
         host_batch_vector<T>             hA(size_A, 1, bc);
-        host_batch_vector<T>             hARes(size_ARes, 1, bc);
+        host_batch_vector<T>             hB(size_B, 1, bc);
+        host_batch_vector<T>             hBRes(size_BRes, 1, bc);
         host_strided_batch_vector<int>   hInfo(1, 1, 1, bc);
-        host_strided_batch_vector<int>   hInfoRes(1, 1, 1, bc);
         device_batch_vector<T>           dA(size_A, 1, bc);
+        device_batch_vector<T>           dB(size_B, 1, bc);
         device_strided_batch_vector<int> dInfo(1, 1, 1, bc);
         if(size_A)
             CHECK_HIP_ERROR(dA.memcheck());
+        if(size_B)
+            CHECK_HIP_ERROR(dB.memcheck());
         CHECK_HIP_ERROR(dInfo.memcheck());
 
         int size_W;
-        hipsolver_potrf_bufferSize(FORTRAN, handle, uplo, n, dA.data(), lda, &size_W, bc);
+        hipsolver_potrs_bufferSize(
+            FORTRAN, handle, uplo, n, nrhs, dA.data(), lda, dB.data(), ldb, &size_W, bc);
         device_strided_batch_vector<T> dWork(size_W, 1, size_W, bc);
         if(size_W)
             CHECK_HIP_ERROR(dWork.memcheck());
 
         // check computations
         if(argus.unit_check || argus.norm_check)
-            potrf_getError<FORTRAN, T>(handle,
+            potrs_getError<FORTRAN, T>(handle,
                                        uplo,
                                        n,
+                                       nrhs,
                                        dA,
                                        lda,
                                        stA,
+                                       dB,
+                                       ldb,
+                                       stB,
                                        dWork,
                                        size_W,
                                        dInfo,
                                        bc,
                                        hA,
-                                       hARes,
+                                       hB,
+                                       hBRes,
                                        hInfo,
-                                       hInfoRes,
                                        &max_error);
 
         // collect performance data
         if(argus.timing)
-            potrf_getPerfData<FORTRAN, T>(handle,
+            potrs_getPerfData<FORTRAN, T>(handle,
                                           uplo,
                                           n,
+                                          nrhs,
                                           dA,
                                           lda,
                                           stA,
+                                          dB,
+                                          ldb,
+                                          stB,
                                           dWork,
                                           size_W,
                                           dInfo,
                                           bc,
                                           hA,
+                                          hB,
                                           hInfo,
                                           &gpu_time_used,
                                           &cpu_time_used,
@@ -400,52 +557,65 @@ void testing_potrf(Arguments& argus)
     {
         // memory allocations
         host_strided_batch_vector<T>     hA(size_A, 1, stA, bc);
-        host_strided_batch_vector<T>     hARes(size_ARes, 1, stARes, bc);
+        host_strided_batch_vector<T>     hB(size_B, 1, stB, bc);
+        host_strided_batch_vector<T>     hBRes(size_BRes, 1, stBRes, bc);
         host_strided_batch_vector<int>   hInfo(1, 1, 1, bc);
-        host_strided_batch_vector<int>   hInfoRes(1, 1, 1, bc);
         device_strided_batch_vector<T>   dA(size_A, 1, stA, bc);
+        device_strided_batch_vector<T>   dB(size_B, 1, stB, bc);
         device_strided_batch_vector<int> dInfo(1, 1, 1, bc);
         if(size_A)
             CHECK_HIP_ERROR(dA.memcheck());
+        if(size_B)
+            CHECK_HIP_ERROR(dB.memcheck());
         CHECK_HIP_ERROR(dInfo.memcheck());
 
         int size_W;
-        hipsolver_potrf_bufferSize(FORTRAN, handle, uplo, n, dA.data(), lda, &size_W, bc);
+        hipsolver_potrs_bufferSize(
+            FORTRAN, handle, uplo, n, nrhs, dA.data(), lda, dB.data(), ldb, &size_W, bc);
         device_strided_batch_vector<T> dWork(size_W, 1, size_W, bc);
         if(size_W)
             CHECK_HIP_ERROR(dWork.memcheck());
 
         // check computations
         if(argus.unit_check || argus.norm_check)
-            potrf_getError<FORTRAN, T>(handle,
+            potrs_getError<FORTRAN, T>(handle,
                                        uplo,
                                        n,
+                                       nrhs,
                                        dA,
                                        lda,
                                        stA,
+                                       dB,
+                                       ldb,
+                                       stB,
                                        dWork,
                                        size_W,
                                        dInfo,
                                        bc,
                                        hA,
-                                       hARes,
+                                       hB,
+                                       hBRes,
                                        hInfo,
-                                       hInfoRes,
                                        &max_error);
 
         // collect performance data
         if(argus.timing)
-            potrf_getPerfData<FORTRAN, T>(handle,
+            potrs_getPerfData<FORTRAN, T>(handle,
                                           uplo,
                                           n,
+                                          nrhs,
                                           dA,
                                           lda,
                                           stA,
+                                          dB,
+                                          ldb,
+                                          stB,
                                           dWork,
                                           size_W,
                                           dInfo,
                                           bc,
                                           hA,
+                                          hB,
                                           hInfo,
                                           &gpu_time_used,
                                           &cpu_time_used,
@@ -454,7 +624,7 @@ void testing_potrf(Arguments& argus)
     }
 
     // validate results for rocsolver-test
-    // using n * machine_precision as tolerance
+    // using m * machine_precision as tolerance
     if(argus.unit_check)
         ROCSOLVER_TEST_CHECK(T, max_error, n);
 
@@ -468,18 +638,19 @@ void testing_potrf(Arguments& argus)
             std::cerr << "============================================\n";
             if(BATCHED)
             {
-                rocsolver_bench_output("uplo", "n", "lda", "batch_c");
-                rocsolver_bench_output(uploC, n, lda, bc);
+                rocsolver_bench_output("uplo", "n", "nrhs", "lda", "ldb", "batch_c");
+                rocsolver_bench_output(uploC, n, nrhs, lda, ldb, bc);
             }
             else if(STRIDED)
             {
-                rocsolver_bench_output("uplo", "n", "lda", "strideA", "batch_c");
-                rocsolver_bench_output(uploC, n, lda, stA, bc);
+                rocsolver_bench_output(
+                    "uplo", "n", "nrhs", "lda", "ldb", "strideA", "strideB", "batch_c");
+                rocsolver_bench_output(uploC, n, nrhs, lda, ldb, stA, stB, bc);
             }
             else
             {
-                rocsolver_bench_output("uplo", "n", "lda");
-                rocsolver_bench_output(uploC, n, lda);
+                rocsolver_bench_output("uplo", "n", "nrhs", "lda", "ldb");
+                rocsolver_bench_output(uploC, n, nrhs, lda, ldb);
             }
             std::cerr << "\n============================================\n";
             std::cerr << "Results:\n";
@@ -504,4 +675,7 @@ void testing_potrf(Arguments& argus)
                 rocsolver_bench_output(gpu_time_used);
         }
     }
+
+    // ensure all arguments were consumed
+    argus.validate_consumed();
 }

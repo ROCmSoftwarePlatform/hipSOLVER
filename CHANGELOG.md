@@ -2,13 +2,23 @@
 
 Full documentation for hipSOLVER is available at [hipsolver.readthedocs.io](https://hipsolver.readthedocs.io/en/latest/).
 
-## [(unreleased) hipSOLVER for ROCm 4.5.0]
+
+## [(Unreleased) hipSOLVER for ROCm 4.5.0]
 ### Added
+- Added functions
+  - potrs
+    - hipsolverSpotrs_bufferSize, hipsolverDpotrs_bufferSize, hipsolverCpotrs_bufferSize, hipsolverZpotrs_bufferSize
+    - hipsolverSpotrs, hipsolverDpotrs, hipsolverCpotrs, hipsolverZpotrs
+  - potrsBatched
+    - hipsolverSpotrsBatched_bufferSize, hipsolverDpotrsBatched_bufferSize, hipsolverCpotrsBatched_bufferSize, hipsolverZpotrsBatched_bufferSize
+    - hipsolverSpotrsBatched, hipsolverDpotrsBatched, hipsolverCpotrsBatched, hipsolverZpotrsBatched
+
 ### Optimizations
 ### Changed
 ### Removed
 ### Fixed
 ### Known Issues
+
 
 ## [hipSOLVER 1.0.0 for ROCm 4.4.0]
 ### Added
@@ -61,7 +71,7 @@ Full documentation for hipSOLVER is available at [hipsolver.readthedocs.io](http
   - auxiliary
     - hipsolverCreate, hipsolverDestroy
     - hipsolverSetStream, hipsolverGetStream
-  
+
 ### Changed
 - hipSOLVER functions will now return HIPSOLVER_STATUS_INVALID_ENUM or HIPSOLVER_STATUS_UNKNOWN status codes rather than throw exceptions.
 - hipsolverXgetrf functions now take lwork as an argument.

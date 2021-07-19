@@ -131,6 +131,9 @@ void cblas_getrs(
 template <typename T>
 void cblas_potrf(hipsolverFillMode_t uplo, int n, T* A, int lda, int* info);
 
+template <typename T>
+void cblas_potrs(hipsolverFillMode_t uplo, int n, int nrhs, T* A, int lda, T* B, int ldb);
+
 template <typename T, typename S>
 void cblas_syevd_heevd(hipsolverEigMode_t  evect,
                        hipsolverFillMode_t uplo,

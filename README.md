@@ -92,13 +92,17 @@ While the API of hipSOLVER is, overall, modeled after that of cuSOLVER, there ar
 
 * hipsolverXgesvd_bufferSize requires `jobu` and `jobv` as arguments
 * hipsolverXgetrf requires `lwork` as an argument
-* hipsolverXgetrs requires `work` and `lwork` as arguments, and
-* hipsolverXpotrfBatched requires `work` and `lwork` as arguments.
+* hipsolverXgetrs requires `work` and `lwork` as arguments
+* hipsolverXpotrfBatched requires `work` and `lwork` as arguments
+* hipsolverXpotrs requires `work` and `lwork` as arguments, and
+* hipsolverXpotrsBatched requires `work` and `lwork` as arguments.
 
 In order to support these changes, hipSOLVER adds the following functions as well:
 
 * hipsolverXgetrs_bufferSize
 * hipsolverXpotrfBatched_bufferSize
+* hipsolverXpotrs_bufferSize
+* hipsolverXpotrsBatched_bufferSize
 
 Furthermore, due to differences in implementation and API design between rocSOLVER and cuSOLVER, not all arguments are handled identically between the two backends. When using the rocSOLVER backend, keep in mind the following differences:
 
@@ -157,6 +161,10 @@ at [rocSOLVER API](https://rocsolver.readthedocs.io/en/latest/userguide_api.html
 | hipsolverXpotrf | x | x | x | x |
 | hipsolverXpotrfBatched_bufferSize | x | x | x | x |
 | hipsolverXpotrfBatched | x | x | x | x |
+| hipsolverXpotrs_bufferSize | x | x | x | x |
+| hipsolverXpotrs | x | x | x | x |
+| hipsolverXpotrsBatched_bufferSize | x | x | x | x |
+| hipsolverXpotrsBatched | x | x | x | x |
 | hipsolverXsyevd_bufferSize | x | x |   |   |
 | hipsolverXsyevd | x | x |   |   |
 | hipsolverXheevd_bufferSize |   |   | x | x |

@@ -1888,6 +1888,336 @@ module hipsolver_interface
         res = hipsolverZpotrfBatched(handle, uplo, n, A, lda, work, lwork, info, batch_count)
     end function hipsolverZpotrfBatchedFortran
 
+    ! ******************** POTRS ********************
+    function hipsolverSpotrs_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverSpotrs_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverSpotrs_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork)
+    end function hipsolverSpotrs_bufferSizeFortran
+    
+    function hipsolverDpotrs_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverDpotrs_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverDpotrs_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork)
+    end function hipsolverDpotrs_bufferSizeFortran
+    
+    function hipsolverCpotrs_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverCpotrs_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverCpotrs_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork)
+    end function hipsolverCpotrs_bufferSizeFortran
+    
+    function hipsolverZpotrs_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverZpotrs_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverZpotrs_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork)
+    end function hipsolverZpotrs_bufferSizeFortran
+
+    function hipsolverSpotrsFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info) &
+            result(res) &
+            bind(c, name = 'hipsolverSpotrsFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverSpotrs(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info)
+    end function hipsolverSpotrsFortran
+
+    function hipsolverDpotrsFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info) &
+            result(res) &
+            bind(c, name = 'hipsolverDpotrsFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverDpotrs(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info)
+    end function hipsolverDpotrsFortran
+
+    function hipsolverCpotrsFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info) &
+            result(res) &
+            bind(c, name = 'hipsolverCpotrsFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverCpotrs(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info)
+    end function hipsolverCpotrsFortran
+
+    function hipsolverZpotrsFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info) &
+            result(res) &
+            bind(c, name = 'hipsolverZpotrsFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverZpotrs(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info)
+    end function hipsolverZpotrsFortran
+
+    ! ******************** POTRS_BATCHED ********************
+    function hipsolverSpotrsBatched_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverSpotrsBatched_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverSpotrsBatched_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count)
+    end function hipsolverSpotrsBatched_bufferSizeFortran
+    
+    function hipsolverDpotrsBatched_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverDpotrsBatched_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverDpotrsBatched_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count)
+    end function hipsolverDpotrsBatched_bufferSizeFortran
+    
+    function hipsolverCpotrsBatched_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverCpotrsBatched_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverCpotrsBatched_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count)
+    end function hipsolverCpotrsBatched_bufferSizeFortran
+    
+    function hipsolverZpotrsBatched_bufferSizeFortran(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverZpotrsBatched_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: lwork
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverZpotrsBatched_bufferSize(handle, uplo, n, nrhs, A, lda, B, ldb, lwork, batch_count)
+    end function hipsolverZpotrsBatched_bufferSizeFortran
+
+    function hipsolverSpotrsBatchedFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverSpotrsBatchedFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverSpotrsBatched(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count)
+    end function hipsolverSpotrsBatchedFortran
+
+    function hipsolverDpotrsBatchedFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverDpotrsBatchedFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverDpotrsBatched(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count)
+    end function hipsolverDpotrsBatchedFortran
+
+    function hipsolverCpotrsBatchedFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverCpotrsBatchedFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverCpotrsBatched(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count)
+    end function hipsolverCpotrsBatchedFortran
+
+    function hipsolverZpotrsBatchedFortran(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count) &
+            result(res) &
+            bind(c, name = 'hipsolverZpotrsBatchedFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(kind(HIPSOLVER_FILL_MODE_LOWER)), value :: uplo
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: info
+        integer(c_int), value :: batch_count
+        integer(c_int) :: res
+        res = hipsolverZpotrsBatched(handle, uplo, n, nrhs, A, lda, B, ldb, work, lwork, info, batch_count)
+    end function hipsolverZpotrsBatchedFortran
+
     ! ******************** SYEVD/HEEVD ********************
     function hipsolverSsyevd_bufferSizeFortran(handle, jobz, uplo, n, A, lda, D, lwork) &
             result(res) &

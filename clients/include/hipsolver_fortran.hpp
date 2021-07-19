@@ -970,6 +970,196 @@ HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZpotrfBatchedFortran(hipsolverHandle
                                                                  int*                devInfo,
                                                                  int                 batch_count);
 
+// potrs
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSpotrs_bufferSizeFortran(hipsolverHandle_t   handle,
+                                                                     hipsolverFillMode_t uplo,
+                                                                     int                 n,
+                                                                     int                 nrhs,
+                                                                     float*              A,
+                                                                     int                 lda,
+                                                                     float*              B,
+                                                                     int                 ldb,
+                                                                     int*                lwork);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverDpotrs_bufferSizeFortran(hipsolverHandle_t   handle,
+                                                                     hipsolverFillMode_t uplo,
+                                                                     int                 n,
+                                                                     int                 nrhs,
+                                                                     double*             A,
+                                                                     int                 lda,
+                                                                     double*             B,
+                                                                     int                 ldb,
+                                                                     int*                lwork);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverCpotrs_bufferSizeFortran(hipsolverHandle_t   handle,
+                                                                     hipsolverFillMode_t uplo,
+                                                                     int                 n,
+                                                                     int                 nrhs,
+                                                                     hipFloatComplex*    A,
+                                                                     int                 lda,
+                                                                     hipFloatComplex*    B,
+                                                                     int                 ldb,
+                                                                     int*                lwork);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZpotrs_bufferSizeFortran(hipsolverHandle_t   handle,
+                                                                     hipsolverFillMode_t uplo,
+                                                                     int                 n,
+                                                                     int                 nrhs,
+                                                                     hipDoubleComplex*   A,
+                                                                     int                 lda,
+                                                                     hipDoubleComplex*   B,
+                                                                     int                 ldb,
+                                                                     int*                lwork);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSpotrsFortran(hipsolverHandle_t   handle,
+                                                          hipsolverFillMode_t uplo,
+                                                          int                 n,
+                                                          int                 nrhs,
+                                                          float*              A,
+                                                          int                 lda,
+                                                          float*              B,
+                                                          int                 ldb,
+                                                          float*              work,
+                                                          int                 lwork,
+                                                          int*                devInfo);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverDpotrsFortran(hipsolverHandle_t   handle,
+                                                          hipsolverFillMode_t uplo,
+                                                          int                 n,
+                                                          int                 nrhs,
+                                                          double*             A,
+                                                          int                 lda,
+                                                          double*             B,
+                                                          int                 ldb,
+                                                          double*             work,
+                                                          int                 lwork,
+                                                          int*                devInfo);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverCpotrsFortran(hipsolverHandle_t   handle,
+                                                          hipsolverFillMode_t uplo,
+                                                          int                 n,
+                                                          int                 nrhs,
+                                                          hipFloatComplex*    A,
+                                                          int                 lda,
+                                                          hipFloatComplex*    B,
+                                                          int                 ldb,
+                                                          hipFloatComplex*    work,
+                                                          int                 lwork,
+                                                          int*                devInfo);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZpotrsFortran(hipsolverHandle_t   handle,
+                                                          hipsolverFillMode_t uplo,
+                                                          int                 n,
+                                                          int                 nrhs,
+                                                          hipDoubleComplex*   A,
+                                                          int                 lda,
+                                                          hipDoubleComplex*   B,
+                                                          int                 ldb,
+                                                          hipDoubleComplex*   work,
+                                                          int                 lwork,
+                                                          int*                devInfo);
+
+// potrs_batched
+HIPSOLVER_EXPORT hipsolverStatus_t
+    hipsolverSpotrsBatched_bufferSizeFortran(hipsolverHandle_t   handle,
+                                             hipsolverFillMode_t uplo,
+                                             int                 n,
+                                             int                 nrhs,
+                                             float*              A[],
+                                             int                 lda,
+                                             float*              B[],
+                                             int                 ldb,
+                                             int*                lwork,
+                                             int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t
+    hipsolverDpotrsBatched_bufferSizeFortran(hipsolverHandle_t   handle,
+                                             hipsolverFillMode_t uplo,
+                                             int                 n,
+                                             int                 nrhs,
+                                             double*             A[],
+                                             int                 lda,
+                                             double*             B[],
+                                             int                 ldb,
+                                             int*                lwork,
+                                             int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t
+    hipsolverCpotrsBatched_bufferSizeFortran(hipsolverHandle_t   handle,
+                                             hipsolverFillMode_t uplo,
+                                             int                 n,
+                                             int                 nrhs,
+                                             hipFloatComplex*    A[],
+                                             int                 lda,
+                                             hipFloatComplex*    B[],
+                                             int                 ldb,
+                                             int*                lwork,
+                                             int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t
+    hipsolverZpotrsBatched_bufferSizeFortran(hipsolverHandle_t   handle,
+                                             hipsolverFillMode_t uplo,
+                                             int                 n,
+                                             int                 nrhs,
+                                             hipDoubleComplex*   A[],
+                                             int                 lda,
+                                             hipDoubleComplex*   B[],
+                                             int                 ldb,
+                                             int*                lwork,
+                                             int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSpotrsBatchedFortran(hipsolverHandle_t   handle,
+                                                                 hipsolverFillMode_t uplo,
+                                                                 int                 n,
+                                                                 int                 nrhs,
+                                                                 float*              A[],
+                                                                 int                 lda,
+                                                                 float*              B[],
+                                                                 int                 ldb,
+                                                                 float*              work,
+                                                                 int                 lwork,
+                                                                 int*                devInfo,
+                                                                 int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverDpotrsBatchedFortran(hipsolverHandle_t   handle,
+                                                                 hipsolverFillMode_t uplo,
+                                                                 int                 n,
+                                                                 int                 nrhs,
+                                                                 double*             A[],
+                                                                 int                 lda,
+                                                                 double*             B[],
+                                                                 int                 ldb,
+                                                                 double*             work,
+                                                                 int                 lwork,
+                                                                 int*                devInfo,
+                                                                 int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverCpotrsBatchedFortran(hipsolverHandle_t   handle,
+                                                                 hipsolverFillMode_t uplo,
+                                                                 int                 n,
+                                                                 int                 nrhs,
+                                                                 hipFloatComplex*    A[],
+                                                                 int                 lda,
+                                                                 hipFloatComplex*    B[],
+                                                                 int                 ldb,
+                                                                 hipFloatComplex*    work,
+                                                                 int                 lwork,
+                                                                 int*                devInfo,
+                                                                 int                 batch_count);
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZpotrsBatchedFortran(hipsolverHandle_t   handle,
+                                                                 hipsolverFillMode_t uplo,
+                                                                 int                 n,
+                                                                 int                 nrhs,
+                                                                 hipDoubleComplex*   A[],
+                                                                 int                 lda,
+                                                                 hipDoubleComplex*   B[],
+                                                                 int                 ldb,
+                                                                 hipDoubleComplex*   work,
+                                                                 int                 lwork,
+                                                                 int*                devInfo,
+                                                                 int                 batch_count);
+
 // syevd/heevd
 HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSsyevd_bufferSizeFortran(hipsolverHandle_t   handle,
                                                                      hipsolverEigMode_t  jobz,

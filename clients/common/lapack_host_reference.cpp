@@ -489,6 +489,25 @@ void dpotrf_(char* uplo, int* m, double* A, int* lda, int* info);
 void cpotrf_(char* uplo, int* m, hipsolverComplex* A, int* lda, int* info);
 void zpotrf_(char* uplo, int* m, hipsolverDoubleComplex* A, int* lda, int* info);
 
+void spotrs_(char* uplo, int* n, int* nrhs, float* A, int* lda, float* B, int* ldb, int* info);
+void dpotrs_(char* uplo, int* n, int* nrhs, double* A, int* lda, double* B, int* ldb, int* info);
+void cpotrs_(char*             uplo,
+             int*              n,
+             int*              nrhs,
+             hipsolverComplex* A,
+             int*              lda,
+             hipsolverComplex* B,
+             int*              ldb,
+             int*              info);
+void zpotrs_(char*                   uplo,
+             int*                    n,
+             int*                    nrhs,
+             hipsolverDoubleComplex* A,
+             int*                    lda,
+             hipsolverDoubleComplex* B,
+             int*                    ldb,
+             int*                    info);
+
 void ssyevd_(char*  evect,
              char*  uplo,
              int*   n,
@@ -1630,6 +1649,51 @@ void cblas_potrf<hipsolverDoubleComplex>(
 {
     char uploC = hipsolver2char_fill(uplo);
     zpotrf_(&uploC, &n, A, &lda, info);
+}
+
+// potrs
+template <>
+void cblas_potrs(hipsolverFillMode_t uplo, int n, int nrhs, float* A, int lda, float* B, int ldb)
+{
+    int  info;
+    char uploC = hipsolver2char_fill(uplo);
+    spotrs_(&uploC, &n, &nrhs, A, &lda, B, &ldb, &info);
+}
+
+template <>
+void cblas_potrs(hipsolverFillMode_t uplo, int n, int nrhs, double* A, int lda, double* B, int ldb)
+{
+    int  info;
+    char uploC = hipsolver2char_fill(uplo);
+    dpotrs_(&uploC, &n, &nrhs, A, &lda, B, &ldb, &info);
+}
+
+template <>
+void cblas_potrs(hipsolverFillMode_t uplo,
+                 int                 n,
+                 int                 nrhs,
+                 hipsolverComplex*   A,
+                 int                 lda,
+                 hipsolverComplex*   B,
+                 int                 ldb)
+{
+    int  info;
+    char uploC = hipsolver2char_fill(uplo);
+    cpotrs_(&uploC, &n, &nrhs, A, &lda, B, &ldb, &info);
+}
+
+template <>
+void cblas_potrs(hipsolverFillMode_t     uplo,
+                 int                     n,
+                 int                     nrhs,
+                 hipsolverDoubleComplex* A,
+                 int                     lda,
+                 hipsolverDoubleComplex* B,
+                 int                     ldb)
+{
+    int  info;
+    char uploC = hipsolver2char_fill(uplo);
+    zpotrs_(&uploC, &n, &nrhs, A, &lda, B, &ldb, &info);
 }
 
 // syevd & heevd
