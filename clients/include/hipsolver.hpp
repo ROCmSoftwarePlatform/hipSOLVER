@@ -1473,6 +1473,291 @@ inline hipsolverStatus_t hipsolver_geqrf(bool                    FORTRAN,
 }
 /********************************************************/
 
+/******************** GESV ********************/
+// normal and strided_batched
+inline hipsolverStatus_t hipsolver_gesv_bufferSize(bool              FORTRAN,
+                                                   hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   float*            A,
+                                                   int               lda,
+                                                   int*              ipiv,
+                                                   float*            B,
+                                                   int               ldb,
+                                                   float*            X,
+                                                   int               ldx,
+                                                   size_t*           lwork)
+{
+    if(!FORTRAN)
+        return hipsolverSSgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork);
+    else
+        return hipsolverSSgesv_bufferSizeFortran(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork);
+}
+
+inline hipsolverStatus_t hipsolver_gesv_bufferSize(bool              FORTRAN,
+                                                   hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   double*           A,
+                                                   int               lda,
+                                                   int*              ipiv,
+                                                   double*           B,
+                                                   int               ldb,
+                                                   double*           X,
+                                                   int               ldx,
+                                                   size_t*           lwork)
+{
+    if(!FORTRAN)
+        return hipsolverDDgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork);
+    else
+        return hipsolverDDgesv_bufferSizeFortran(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork);
+}
+
+inline hipsolverStatus_t hipsolver_gesv_bufferSize(bool              FORTRAN,
+                                                   hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   hipsolverComplex* A,
+                                                   int               lda,
+                                                   int*              ipiv,
+                                                   hipsolverComplex* B,
+                                                   int               ldb,
+                                                   hipsolverComplex* X,
+                                                   int               ldx,
+                                                   size_t*           lwork)
+{
+    if(!FORTRAN)
+        return hipsolverCCgesv_bufferSize(handle,
+                                          n,
+                                          nrhs,
+                                          (hipFloatComplex*)A,
+                                          lda,
+                                          ipiv,
+                                          (hipFloatComplex*)B,
+                                          ldb,
+                                          (hipFloatComplex*)X,
+                                          ldx,
+                                          lwork);
+    else
+        return hipsolverCCgesv_bufferSizeFortran(handle,
+                                                 n,
+                                                 nrhs,
+                                                 (hipFloatComplex*)A,
+                                                 lda,
+                                                 ipiv,
+                                                 (hipFloatComplex*)B,
+                                                 ldb,
+                                                 (hipFloatComplex*)X,
+                                                 ldx,
+                                                 lwork);
+}
+
+inline hipsolverStatus_t hipsolver_gesv_bufferSize(bool                    FORTRAN,
+                                                   hipsolverHandle_t       handle,
+                                                   int                     n,
+                                                   int                     nrhs,
+                                                   hipsolverDoubleComplex* A,
+                                                   int                     lda,
+                                                   int*                    ipiv,
+                                                   hipsolverDoubleComplex* B,
+                                                   int                     ldb,
+                                                   hipsolverDoubleComplex* X,
+                                                   int                     ldx,
+                                                   size_t*                 lwork)
+{
+    if(!FORTRAN)
+        return hipsolverZZgesv_bufferSize(handle,
+                                          n,
+                                          nrhs,
+                                          (hipDoubleComplex*)A,
+                                          lda,
+                                          ipiv,
+                                          (hipDoubleComplex*)B,
+                                          ldb,
+                                          (hipDoubleComplex*)X,
+                                          ldx,
+                                          lwork);
+    else
+        return hipsolverZZgesv_bufferSizeFortran(handle,
+                                                 n,
+                                                 nrhs,
+                                                 (hipDoubleComplex*)A,
+                                                 lda,
+                                                 ipiv,
+                                                 (hipDoubleComplex*)B,
+                                                 ldb,
+                                                 (hipDoubleComplex*)X,
+                                                 ldx,
+                                                 lwork);
+}
+
+inline hipsolverStatus_t hipsolver_gesv(bool              FORTRAN,
+                                        hipsolverHandle_t handle,
+                                        int               n,
+                                        int               nrhs,
+                                        float*            A,
+                                        int               lda,
+                                        int               stA,
+                                        int*              ipiv,
+                                        int               stP,
+                                        float*            B,
+                                        int               ldb,
+                                        int               stB,
+                                        float*            X,
+                                        int               ldx,
+                                        int               stX,
+                                        float*            work,
+                                        size_t            lwork,
+                                        int*              niters,
+                                        int*              info,
+                                        int               bc)
+{
+    if(!FORTRAN)
+        return hipsolverSSgesv(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info);
+    else
+        return hipsolverSSgesvFortran(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info);
+}
+
+inline hipsolverStatus_t hipsolver_gesv(bool              FORTRAN,
+                                        hipsolverHandle_t handle,
+                                        int               n,
+                                        int               nrhs,
+                                        double*           A,
+                                        int               lda,
+                                        int               stA,
+                                        int*              ipiv,
+                                        int               stP,
+                                        double*           B,
+                                        int               ldb,
+                                        int               stB,
+                                        double*           X,
+                                        int               ldx,
+                                        int               stX,
+                                        double*           work,
+                                        size_t            lwork,
+                                        int*              niters,
+                                        int*              info,
+                                        int               bc)
+{
+    if(!FORTRAN)
+        return hipsolverDDgesv(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info);
+    else
+        return hipsolverDDgesvFortran(
+            handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info);
+}
+
+inline hipsolverStatus_t hipsolver_gesv(bool              FORTRAN,
+                                        hipsolverHandle_t handle,
+                                        int               n,
+                                        int               nrhs,
+                                        hipsolverComplex* A,
+                                        int               lda,
+                                        int               stA,
+                                        int*              ipiv,
+                                        int               stP,
+                                        hipsolverComplex* B,
+                                        int               ldb,
+                                        int               stB,
+                                        hipsolverComplex* X,
+                                        int               ldx,
+                                        int               stX,
+                                        hipsolverComplex* work,
+                                        size_t            lwork,
+                                        int*              niters,
+                                        int*              info,
+                                        int               bc)
+{
+    if(!FORTRAN)
+        return hipsolverCCgesv(handle,
+                               n,
+                               nrhs,
+                               (hipFloatComplex*)A,
+                               lda,
+                               ipiv,
+                               (hipFloatComplex*)B,
+                               ldb,
+                               (hipFloatComplex*)X,
+                               ldx,
+                               work,
+                               lwork,
+                               niters,
+                               info);
+    else
+        return hipsolverCCgesvFortran(handle,
+                                      n,
+                                      nrhs,
+                                      (hipFloatComplex*)A,
+                                      lda,
+                                      ipiv,
+                                      (hipFloatComplex*)B,
+                                      ldb,
+                                      (hipFloatComplex*)X,
+                                      ldx,
+                                      work,
+                                      lwork,
+                                      niters,
+                                      info);
+}
+
+inline hipsolverStatus_t hipsolver_gesv(bool                    FORTRAN,
+                                        hipsolverHandle_t       handle,
+                                        int                     n,
+                                        int                     nrhs,
+                                        hipsolverDoubleComplex* A,
+                                        int                     lda,
+                                        int                     stA,
+                                        int*                    ipiv,
+                                        int                     stP,
+                                        hipsolverDoubleComplex* B,
+                                        int                     ldb,
+                                        int                     stB,
+                                        hipsolverDoubleComplex* X,
+                                        int                     ldx,
+                                        int                     stX,
+                                        hipsolverDoubleComplex* work,
+                                        size_t                  lwork,
+                                        int*                    niters,
+                                        int*                    info,
+                                        int                     bc)
+{
+    if(!FORTRAN)
+        return hipsolverZZgesv(handle,
+                               n,
+                               nrhs,
+                               (hipDoubleComplex*)A,
+                               lda,
+                               ipiv,
+                               (hipDoubleComplex*)B,
+                               ldb,
+                               (hipDoubleComplex*)X,
+                               ldx,
+                               work,
+                               lwork,
+                               niters,
+                               info);
+    else
+        return hipsolverZZgesvFortran(handle,
+                                      n,
+                                      nrhs,
+                                      (hipDoubleComplex*)A,
+                                      lda,
+                                      ipiv,
+                                      (hipDoubleComplex*)B,
+                                      ldb,
+                                      (hipDoubleComplex*)X,
+                                      ldx,
+                                      work,
+                                      lwork,
+                                      niters,
+                                      info);
+}
+/********************************************************/
+
 /******************** GESVD ********************/
 // normal and strided_batched
 inline hipsolverStatus_t hipsolver_gesvd_bufferSize(bool              FORTRAN,

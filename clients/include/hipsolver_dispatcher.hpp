@@ -10,6 +10,7 @@
 
 #include "testing_gebrd.hpp"
 #include "testing_geqrf.hpp"
+#include "testing_gesv.hpp"
 #include "testing_gesvd.hpp"
 #include "testing_getrf.hpp"
 #include "testing_getrf_npvt.hpp"
@@ -45,6 +46,7 @@ class hipsolver_dispatcher
         static const func_map map = {
             {"gebrd", testing_gebrd<false, false, false, T>},
             {"geqrf", testing_geqrf<false, false, false, T>},
+            {"gesv", testing_gesv<false, false, false, T>},
             {"gesvd", testing_gesvd<false, false, false, T>},
             {"getrf", testing_getrf<false, false, false, T>},
             {"getrs", testing_getrs<false, false, false, T>},

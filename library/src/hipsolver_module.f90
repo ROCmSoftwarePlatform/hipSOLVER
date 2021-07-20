@@ -1220,6 +1220,187 @@ module hipsolver
             type(c_ptr), value :: info
         end function hipsolverZgeqrf
     end interface
+
+    ! ******************** GESV ********************
+    interface
+        function hipsolverSSgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+                result(c_int) &
+                bind(c, name = 'hipsolverSSgesv_bufferSize')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: lwork
+        end function hipsolverSSgesv_bufferSize
+    end interface
+    
+    interface
+        function hipsolverDDgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+                result(c_int) &
+                bind(c, name = 'hipsolverDDgesv_bufferSize')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: lwork
+        end function hipsolverDDgesv_bufferSize
+    end interface
+    
+    interface
+        function hipsolverCCgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+                result(c_int) &
+                bind(c, name = 'hipsolverCCgesv_bufferSize')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: lwork
+        end function hipsolverCCgesv_bufferSize
+    end interface
+    
+    interface
+        function hipsolverZZgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+                result(c_int) &
+                bind(c, name = 'hipsolverZZgesv_bufferSize')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: lwork
+        end function hipsolverZZgesv_bufferSize
+    end interface
+
+    interface
+        function hipsolverSSgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+                result(c_int) &
+                bind(c, name = 'hipsolverSSgesv')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: work
+            integer(c_int), value :: lwork
+            type(c_ptr), value :: niters
+            type(c_ptr), value :: info
+        end function hipsolverSSgesv
+    end interface
+
+    interface
+        function hipsolverDDgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+                result(c_int) &
+                bind(c, name = 'hipsolverDDgesv')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: work
+            integer(c_int), value :: lwork
+            type(c_ptr), value :: niters
+            type(c_ptr), value :: info
+        end function hipsolverDDgesv
+    end interface
+
+    interface
+        function hipsolverCCgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+                result(c_int) &
+                bind(c, name = 'hipsolverCCgesv')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: work
+            integer(c_int), value :: lwork
+            type(c_ptr), value :: niters
+            type(c_ptr), value :: info
+        end function hipsolverCCgesv
+    end interface
+
+    interface
+        function hipsolverZZgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+                result(c_int) &
+                bind(c, name = 'hipsolverZZgesv')
+            use iso_c_binding
+            use hipsolver_enums
+            implicit none
+            type(c_ptr), value :: handle
+            integer(c_int), value :: n
+            integer(c_int), value :: nrhs
+            type(c_ptr), value :: A
+            integer(c_int), value :: lda
+            type(c_ptr), value :: ipiv
+            type(c_ptr), value :: B
+            integer(c_int), value :: ldb
+            type(c_ptr), value :: X
+            integer(c_int), value :: ldx
+            type(c_ptr), value :: work
+            integer(c_int), value :: lwork
+            type(c_ptr), value :: niters
+            type(c_ptr), value :: info
+        end function hipsolverZZgesv
+    end interface
     
     ! ******************** GESVD ********************
     interface

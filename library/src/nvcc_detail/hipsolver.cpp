@@ -160,14 +160,17 @@ hipsolverStatus_t cuda2hip_status(cusolverStatus_t cuStatus)
     case CUSOLVER_STATUS_ALLOC_FAILED:
         return HIPSOLVER_STATUS_ALLOC_FAILED;
     case CUSOLVER_STATUS_INVALID_VALUE:
+    case CUSOLVER_STATUS_IRS_PARAMS_INVALID:
         return HIPSOLVER_STATUS_INVALID_VALUE;
     case CUSOLVER_STATUS_MAPPING_ERROR:
         return HIPSOLVER_STATUS_MAPPING_ERROR;
     case CUSOLVER_STATUS_EXECUTION_FAILED:
         return HIPSOLVER_STATUS_EXECUTION_FAILED;
     case CUSOLVER_STATUS_INTERNAL_ERROR:
+    case CUSOLVER_STATUS_IRS_INTERNAL_ERROR:
         return HIPSOLVER_STATUS_INTERNAL_ERROR;
     case CUSOLVER_STATUS_NOT_SUPPORTED:
+    case CUSOLVER_STATUS_IRS_NOT_SUPPORTED:
         return HIPSOLVER_STATUS_NOT_SUPPORTED;
     case CUSOLVER_STATUS_ARCH_MISMATCH:
         return HIPSOLVER_STATUS_ARCH_MISMATCH;
@@ -1587,6 +1590,255 @@ try
                                             (cuDoubleComplex*)tau,
                                             (cuDoubleComplex*)work,
                                             lwork,
+                                            devInfo));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+/******************** GESV ********************/
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSSgesv_bufferSize(hipsolverHandle_t handle,
+                                                              int               n,
+                                                              int               nrhs,
+                                                              float*            A,
+                                                              int               lda,
+                                                              int*              devIpiv,
+                                                              float*            B,
+                                                              int               ldb,
+                                                              float*            X,
+                                                              int               ldx,
+                                                              size_t*           lwork)
+try
+{
+    return cuda2hip_status(cusolverDnSSgesv_bufferSize(
+        (cusolverDnHandle_t)handle, n, nrhs, A, lda, devIpiv, B, ldb, X, ldx, nullptr, lwork));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverDDgesv_bufferSize(hipsolverHandle_t handle,
+                                                              int               n,
+                                                              int               nrhs,
+                                                              double*           A,
+                                                              int               lda,
+                                                              int*              devIpiv,
+                                                              double*           B,
+                                                              int               ldb,
+                                                              double*           X,
+                                                              int               ldx,
+                                                              size_t*           lwork)
+try
+{
+    return cuda2hip_status(cusolverDnDDgesv_bufferSize(
+        (cusolverDnHandle_t)handle, n, nrhs, A, lda, devIpiv, B, ldb, X, ldx, nullptr, lwork));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverCCgesv_bufferSize(hipsolverHandle_t handle,
+                                                              int               n,
+                                                              int               nrhs,
+                                                              hipFloatComplex*  A,
+                                                              int               lda,
+                                                              int*              devIpiv,
+                                                              hipFloatComplex*  B,
+                                                              int               ldb,
+                                                              hipFloatComplex*  X,
+                                                              int               ldx,
+                                                              size_t*           lwork)
+try
+{
+    return cuda2hip_status(cusolverDnCCgesv_bufferSize((cusolverDnHandle_t)handle,
+                                                       n,
+                                                       nrhs,
+                                                       (cuComplex*)A,
+                                                       lda,
+                                                       devIpiv,
+                                                       (cuComplex*)B,
+                                                       ldb,
+                                                       (cuComplex*)X,
+                                                       ldx,
+                                                       nullptr,
+                                                       lwork));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZZgesv_bufferSize(hipsolverHandle_t handle,
+                                                              int               n,
+                                                              int               nrhs,
+                                                              hipDoubleComplex* A,
+                                                              int               lda,
+                                                              int*              devIpiv,
+                                                              hipDoubleComplex* B,
+                                                              int               ldb,
+                                                              hipDoubleComplex* X,
+                                                              int               ldx,
+                                                              size_t*           lwork)
+try
+{
+    return cuda2hip_status(cusolverDnZZgesv_bufferSize((cusolverDnHandle_t)handle,
+                                                       n,
+                                                       nrhs,
+                                                       (cuDoubleComplex*)A,
+                                                       lda,
+                                                       devIpiv,
+                                                       (cuDoubleComplex*)B,
+                                                       ldb,
+                                                       (cuDoubleComplex*)X,
+                                                       ldx,
+                                                       nullptr,
+                                                       lwork));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverSSgesv(hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   float*            A,
+                                                   int               lda,
+                                                   int*              devIpiv,
+                                                   float*            B,
+                                                   int               ldb,
+                                                   float*            X,
+                                                   int               ldx,
+                                                   void*             work,
+                                                   size_t            lwork,
+                                                   int*              niters,
+                                                   int*              devInfo)
+try
+{
+    return cuda2hip_status(cusolverDnSSgesv((cusolverDnHandle_t)handle,
+                                            n,
+                                            nrhs,
+                                            A,
+                                            lda,
+                                            devIpiv,
+                                            B,
+                                            ldb,
+                                            X,
+                                            ldx,
+                                            work,
+                                            lwork,
+                                            niters,
+                                            devInfo));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverDDgesv(hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   double*           A,
+                                                   int               lda,
+                                                   int*              devIpiv,
+                                                   double*           B,
+                                                   int               ldb,
+                                                   double*           X,
+                                                   int               ldx,
+                                                   void*             work,
+                                                   size_t            lwork,
+                                                   int*              niters,
+                                                   int*              devInfo)
+try
+{
+    return cuda2hip_status(cusolverDnDDgesv((cusolverDnHandle_t)handle,
+                                            n,
+                                            nrhs,
+                                            A,
+                                            lda,
+                                            devIpiv,
+                                            B,
+                                            ldb,
+                                            X,
+                                            ldx,
+                                            work,
+                                            lwork,
+                                            niters,
+                                            devInfo));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverCCgesv(hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   hipFloatComplex*  A,
+                                                   int               lda,
+                                                   int*              devIpiv,
+                                                   hipFloatComplex*  B,
+                                                   int               ldb,
+                                                   hipFloatComplex*  X,
+                                                   int               ldx,
+                                                   void*             work,
+                                                   size_t            lwork,
+                                                   int*              niters,
+                                                   int*              devInfo)
+try
+{
+    return cuda2hip_status(cusolverDnCCgesv((cusolverDnHandle_t)handle,
+                                            n,
+                                            nrhs,
+                                            (cuComplex*)A,
+                                            lda,
+                                            devIpiv,
+                                            (cuComplex*)B,
+                                            ldb,
+                                            (cuComplex*)X,
+                                            ldx,
+                                            work,
+                                            lwork,
+                                            niters,
+                                            devInfo));
+}
+catch(...)
+{
+    return exception2hip_status();
+}
+
+HIPSOLVER_EXPORT hipsolverStatus_t hipsolverZZgesv(hipsolverHandle_t handle,
+                                                   int               n,
+                                                   int               nrhs,
+                                                   hipDoubleComplex* A,
+                                                   int               lda,
+                                                   int*              devIpiv,
+                                                   hipDoubleComplex* B,
+                                                   int               ldb,
+                                                   hipDoubleComplex* X,
+                                                   int               ldx,
+                                                   void*             work,
+                                                   size_t            lwork,
+                                                   int*              niters,
+                                                   int*              devInfo)
+try
+{
+    return cuda2hip_status(cusolverDnZZgesv((cusolverDnHandle_t)handle,
+                                            n,
+                                            nrhs,
+                                            (cuDoubleComplex*)A,
+                                            lda,
+                                            devIpiv,
+                                            (cuDoubleComplex*)B,
+                                            ldb,
+                                            (cuDoubleComplex*)X,
+                                            ldx,
+                                            work,
+                                            lwork,
+                                            niters,
                                             devInfo));
 }
 catch(...)

@@ -397,6 +397,25 @@ void zgeqrf_(int*                    m,
              int*                    lwork,
              int*                    info);
 
+void sgesv_(int* n, int* nrhs, float* A, int* lda, int* ipiv, float* B, int* ldb, int* info);
+void dgesv_(int* n, int* nrhs, double* A, int* lda, int* ipiv, double* B, int* ldb, int* info);
+void cgesv_(int*              n,
+            int*              nrhs,
+            hipsolverComplex* A,
+            int*              lda,
+            int*              ipiv,
+            hipsolverComplex* B,
+            int*              ldb,
+            int*              info);
+void zgesv_(int*                    n,
+            int*                    nrhs,
+            hipsolverDoubleComplex* A,
+            int*                    lda,
+            int*                    ipiv,
+            hipsolverDoubleComplex* B,
+            int*                    ldb,
+            int*                    info);
+
 void sgesvd_(char*  jobu,
              char*  jobv,
              int*   m,
@@ -1443,6 +1462,46 @@ void cblas_geqrf<hipsolverDoubleComplex>(int                     m,
 {
     int info;
     zgeqrf_(&m, &n, A, &lda, ipiv, work, &lwork, &info);
+}
+
+// gesv
+template <>
+void cblas_gesv<float>(int n, int nrhs, float* A, int lda, int* ipiv, float* B, int ldb, int* info)
+{
+    sgesv_(&n, &nrhs, A, &lda, ipiv, B, &ldb, info);
+}
+
+template <>
+void cblas_gesv<double>(
+    int n, int nrhs, double* A, int lda, int* ipiv, double* B, int ldb, int* info)
+{
+    dgesv_(&n, &nrhs, A, &lda, ipiv, B, &ldb, info);
+}
+
+template <>
+void cblas_gesv<hipsolverComplex>(int               n,
+                                  int               nrhs,
+                                  hipsolverComplex* A,
+                                  int               lda,
+                                  int*              ipiv,
+                                  hipsolverComplex* B,
+                                  int               ldb,
+                                  int*              info)
+{
+    cgesv_(&n, &nrhs, A, &lda, ipiv, B, &ldb, info);
+}
+
+template <>
+void cblas_gesv<hipsolverDoubleComplex>(int                     n,
+                                        int                     nrhs,
+                                        hipsolverDoubleComplex* A,
+                                        int                     lda,
+                                        int*                    ipiv,
+                                        hipsolverDoubleComplex* B,
+                                        int                     ldb,
+                                        int*                    info)
+{
+    zgesv_(&n, &nrhs, A, &lda, ipiv, B, &ldb, info);
 }
 
 // gesvd

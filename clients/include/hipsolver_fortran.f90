@@ -1126,6 +1126,187 @@ module hipsolver_interface
         integer(c_int) :: res
         res = hipsolverZgeqrf(handle, m, n, A, lda, tau, work, lwork, info)
     end function hipsolverZgeqrfFortran
+    
+    ! ******************** GESV ********************
+    function hipsolverSSgesv_bufferSizeFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverSSgesv_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverSSgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork)
+    end function hipsolverSSgesv_bufferSizeFortran
+    
+    function hipsolverDDgesv_bufferSizeFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverDDgesv_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverDDgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork)
+    end function hipsolverDDgesv_bufferSizeFortran
+    
+    function hipsolverCCgesv_bufferSizeFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverCCgesv_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverCCgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork)
+    end function hipsolverCCgesv_bufferSizeFortran
+    
+    function hipsolverZZgesv_bufferSizeFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork) &
+            result(res) &
+            bind(c, name = 'hipsolverZZgesv_bufferSizeFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: lwork
+        integer(c_int) :: res
+        res = hipsolverZZgesv_bufferSize(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, lwork)
+    end function hipsolverZZgesv_bufferSizeFortran
+
+    function hipsolverSSgesvFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+            result(res) &
+            bind(c, name = 'hipsolverSSgesvFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: niters
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverSSgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info)
+    end function hipsolverSSgesvFortran
+
+    function hipsolverDDgesvFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+            result(res) &
+            bind(c, name = 'hipsolverDDgesvFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: niters
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverDDgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info)
+    end function hipsolverDDgesvFortran
+
+    function hipsolverCCgesvFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+            result(res) &
+            bind(c, name = 'hipsolverCCgesvFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: niters
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverCCgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info)
+    end function hipsolverCCgesvFortran
+
+    function hipsolverZZgesvFortran(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info) &
+            result(res) &
+            bind(c, name = 'hipsolverZZgesvFortran')
+        use iso_c_binding
+        use hipsolver_enums
+        implicit none
+        type(c_ptr), value :: handle
+        integer(c_int), value :: n
+        integer(c_int), value :: nrhs
+        type(c_ptr), value :: A
+        integer(c_int), value :: lda
+        type(c_ptr), value :: ipiv
+        type(c_ptr), value :: B
+        integer(c_int), value :: ldb
+        type(c_ptr), value :: X
+        integer(c_int), value :: ldx
+        type(c_ptr), value :: work
+        integer(c_int), value :: lwork
+        type(c_ptr), value :: niters
+        type(c_ptr), value :: info
+        integer(c_int) :: res
+        res = hipsolverZZgesv(handle, n, nrhs, A, lda, ipiv, B, ldb, X, ldx, work, lwork, niters, info)
+    end function hipsolverZZgesvFortran
 
     ! ******************** GESVD ********************
     function hipsolverSgesvd_bufferSizeFortran(handle, jobu, jobv, m, n, lwork) &

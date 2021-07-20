@@ -104,6 +104,9 @@ void cblas_gebrd(int m, int n, T* A, int lda, S* D, S* E, T* tauq, T* taup, T* w
 template <typename T>
 void cblas_geqrf(int m, int n, T* A, int lda, T* ipiv, T* work, int sizeW);
 
+template <typename T>
+void cblas_gesv(int n, int nrhs, T* A, int lda, int* ipiv, T* B, int ldb, int* info);
+
 template <typename T, typename W>
 void cblas_gesvd(char leftv,
                  char rightv,

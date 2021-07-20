@@ -171,11 +171,11 @@ try
         //     "                           Leading dimension of matrices W.\n"
         //     "                           ")
 
-        // ("ldx",
-        //  value<rocblas_int>(),
-        //     "Matrix size parameter.\n"
-        //     "                           Leading dimension of matrices X.\n"
-        //     "                           ")
+        ("ldx",
+         value<rocblas_int>(),
+            "Matrix size parameter.\n"
+            "                           Leading dimension of matrices X.\n"
+            "                           ")
 
         // ("ldy",
         //  value<rocblas_int>(),
